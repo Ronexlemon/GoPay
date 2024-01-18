@@ -8,6 +8,7 @@ import Register from './src/screens/Register';
 import Accounts from './src/screens/Accounts';
 import Account from './src/screens/Account';
 
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {

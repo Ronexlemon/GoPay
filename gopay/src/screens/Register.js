@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity} from 'react-native';
-
+import { generateAccount } from '../web3/AccountUtils';
+import { useState } from 'react';
 
 export default function Register({navigation}) {
+  
   
   return (
     <SafeAreaView className="flex-1 w-screen h-full bg-[#FFFFFF]">
