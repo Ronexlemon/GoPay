@@ -1,10 +1,49 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity,Alert} from 'react-native';
 import { generateAccount } from '../web3/AccountUtils';
 import { useState } from 'react';
 
 export default function Register({navigation}) {
-  
+  const [seedPhrase,setSeedPhrase] = useState("")
+  const [confirmSignin,setConfirmsignIn]= useState(false)
+  const [account,setAccount] = useState([])
+  const [phoneNumber,setPhoneNumber] = useState()
+  const [password,setPassword] = useState()
+  const [confirmPassword,setconfirmPassword] = useState()
+
+  const createAccount = ()=>{
+    try{
+      if(phoneNumber !=" " && password !=" "){
+        const account =  generateAccount();
+        setSeedPhrase(account.seedPhrase);
+        setAccount(account.account);
+        console.log("Account",account)
+        setConfirmsignIn(true)
+      }else{
+        Alert.alert("please confirm all fields")
+      }
+      
+      
+
+    }catch(err){
+      Alert.alert("account err")
+      console.log("ther er",err)
+    }
+  }
+  const handleConfirm =()=>{
+    try{
+      if(phoneNumber !=" " && password !=" "){
+        navigation.navigate('Accounts',{account:account,seedPhrase:seedPhrase,phoneNumber:phoneNumber,password:password})
+
+      }else{
+        Alert.alert("please confirm all fields")
+      }
+      
+
+    }catch(err){
+
+    }
+  }
   
   return (
     <SafeAreaView className="flex-1 w-screen h-full bg-[#FFFFFF]">
@@ -27,7 +66,7 @@ export default function Register({navigation}) {
           
           
           <View className="  ml-32" >
-            <Text className="text-4xl">GoPay  </Text>
+            <Text className="text-4xl">GoPay   </Text>
           </View>
 
         </View>
@@ -37,10 +76,16 @@ export default function Register({navigation}) {
     <View className="flex pl-10 pb-8 flex-col gap-16  w-full text-9xl items-center justify-center pt-11 " >
       <TextInput label="Password"
       placeholder='Mobile Number' 
+      onChange={(e)=> setPhoneNumber(e.nativeEvent.text)}
     
        className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
-      <TextInput placeholder='Password'  label="Password" className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
-      <TextInput placeholder='Confirm Password'  label="Password" className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
+      <TextInput
+      
+      onChange={(e)=> setPassword(e.nativeEvent.text)}
+      placeholder='Password'  label="Password" className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
+      <TextInput 
+      onChange={(e)=> setconfirmPassword(e.nativeEvent.text)}
+      placeholder='Confirm Password'  label="Password" className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
      
     </View>
     <View className="">
@@ -48,16 +93,28 @@ export default function Register({navigation}) {
       <View className="flex   pt-11 gap-4 items-center">
         
         <View className="bg-[#FFFFFF]  w-60 rounded-full  ">
-        <Button 
+          {confirmSignin?<Button 
         
         
-        onPress={()=>navigation.navigate('Accounts')}
+         onPress={handleConfirm}
+       
+title="Confirm"
+color="green"
+
+
+
+/>:<Button 
+        
+        
+        // 
+        onPress={()=>createAccount()}
 title="SIGN IN"
 color="purple"
 
 
 
-/>
+/>}
+        
         </View>
 
       </View>

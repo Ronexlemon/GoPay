@@ -1,10 +1,81 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity} from 'react-native';
 import { seedPhrase,privateKey } from '../constants/data';
+import { useRoute } from '@react-navigation/native';
+import axios from 'axios';
+// const {mongoose} = require("mongoose")
+// const {Schema} = mongoose;
+//  const userSchema = new Schema(
+//     {
+        
+        
+//         password:{
+//             type:String,
+//             required: false,
+//         },        
+//           phoneNumber:{
+//             type:String,
+//             unique:true,
+//             required:true
+//         },
+//           PublicKey:{
+//             type:String,
+//             unique:true,
+//             required:true,
+//         },
+//         PrivateKey:{
+//             type:String,
+//             unique:true,
+//             required:true,
+//         },
+//         seedPhrase:{
+//           type:String,
+//           unique:true,
+//           required:true,
+//       },
+//       userAddress:{
+//         type:String,
+//         unique:false,
+//         required:true,
+//     },
 
+//     },
+//     {timestamps:true}
+//  );
+//   module.exports= mongoose.models.User || mongoose.model("User",userSchema);
 
-export default function Accounts({navigate}) {
-    const wordphrase = seedPhrase.split(" ")
+export default function Accounts({navigation}) {
+   const route = useRoute()
+   const seed = route?.params.seedPhrase;
+   const account = route?.params?.account;
+      const phoneNumber = route?.params?.phoneNumber;
+   const password = route?.params?.password;
+    const wordphrase = seed.split(" ")
+
+    const signUpUser = async()=>{
+      
+      try{
+         await axios.post("https://gopayba.onrender.com/api/signup",{
+          phoneNumber:phoneNumber,
+          password:password,
+          seedPhrase:seed,
+          publicKey:account.address,
+          privateKey: account.privateKey,
+          userAddress:account.address
+          
+          
+        }).then((response)=>{
+          console.log("response is",response);
+          navigation.navigate('Account')
+        }).catch(error => {
+          console.error("Error:", error);
+          // Handle error cases
+        });
+
+      }catch(err){
+        console.log("error signUser",err)
+      }
+    }
 
   
   return (
@@ -42,7 +113,7 @@ export default function Accounts({navigate}) {
         <View className="flex flex-col w-full">
             <Text className="ml-8 text-black">Private Key</Text>
             <View className="bg-[#DBC4DB] h-14 w-3/4 m-4 rounded-2xl">
-              <Text className="text-black">{privateKey}</Text>
+              <Text className="text-black">{account.privateKey}</Text>
 
             </View>
 
@@ -52,7 +123,7 @@ export default function Accounts({navigate}) {
         <Button 
         
         
-        onPress={()=>navigation.navigate('Account')}
+        onPress={signUpUser}
 title="DONE"
 color="purple"
 
