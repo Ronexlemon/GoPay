@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button} from 'react-native';
+import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity} from 'react-native';
 
 
 export default function Login() {
+  
   return (
     <SafeAreaView className="flex-1 w-screen h-full bg-[#FFFFFF]">
        <StatusBar style="auto" />
@@ -31,16 +32,21 @@ export default function Login() {
       
      
     </View>
-    <View className="flex-1  flex-col gap-16  w-full text-9xl items-center justify-center pt-11 " >
-      <TextInput className="bg-[#DBC4DB] w-3/4 h-14 rounded-full "/> 
-      <TextInput className="bg-[#DBC4DB] w-3/4 h-14 rounded-full "/> 
+    <View className="flex-1 pl-10 flex-col gap-16  w-full text-9xl items-center justify-center pt-11 " >
+      <TextInput label="Password"
+      placeholder='Mobile Number'
+      
+    
+       className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
+      <TextInput placeholder='Password'  label="Password" className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
      
     </View>
     <View className="flex-1 pt-20  items-center" >
-      <View className="flex flex-col gap-4 items-center">
+      <View className="flex  gap-4 items-center">
         
         <View className="bg-[#FFFFFF]  w-60 rounded-full  ">
         <Button 
+        
         
 onPress={""}
 title="SIGN IN"
@@ -53,6 +59,10 @@ color="purple"
 
       </View>
      
+    </View>
+    <View className="flex justify-center items-center">
+      <Text>Don't have an account</Text>
+      <TouchableOpacity><Text className="text-[#800080] text-xl">SIGN UP NOW</Text></TouchableOpacity>
     </View>
     <View className="flex-1  items-center" >
       <Text className="pt-11 text-[#BEA629] ">Terms & Conditions</Text>
