@@ -1,12 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity, ScrollView} from 'react-native';
-import { seedPhrase,privateKey } from '../constants/data';
+import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity, ScrollView, FlatList} from 'react-native';
+import { seedPhrase,privateKey,DATA } from '../constants/data';
 import { useRoute } from '@react-navigation/native';
+
 
 export default function Account({navigate}) {
   // const route = useRoute()
   // const data = route?.params?.data
      const wordphrase = seedPhrase.split(" ")
+
+     const Transactions =(trasact)=>{
+      <View className="w-3/4 ">
+        <Text className="text-red-300">{trasact}</Text>
+        <Text>{trasact}</Text>
+
+      </View>
+     }
    
 
   
@@ -39,14 +48,32 @@ export default function Account({navigate}) {
           
         </View>
         {/* recent activities */}
-        <View className="flex justify-between w-3/4 mt-10">
+        <View className=" justify-between w-3/4 mt-10">
           <Text>RECENT ACTIVITIES</Text>
           
         </View>
         {/* Transaction */}
-        <ScrollView>
-          
+       
+        <ScrollView className=" w-3/4 h-full">
+        {DATA.map((word, index) => (
+                    
+                       <View className="w-full h-20 bg-[#FBF1FB] mb-4 p-2  justify-between  rounded-2xl" style={{flexDirection:"row",flexWrap:"wrap"}} key={index}>
+                        <Text className="w-1/2 text-black"> {word.title}</Text>
+                        <Text className="w-1/2 text-green-700"> {word.amount}</Text>
+                        <Text className="w-1/2"> {word.date}</Text>
+                        <Text className="w-1/2"> {word.title}</Text>
+                      
+                    </View>
+                    
+                   
+                  
+                  ))}
+        
         </ScrollView>
+       
+        
+
+        
        </View>
 
 
