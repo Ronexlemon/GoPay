@@ -35,7 +35,8 @@ export default function Account({navigation}) {
 useEffect(()=>{
   async function fetchdata(){
     const data =  await getData()
-    console.log("user data s s s ",data.user.PrivateKey)
+    console.log("user data s s s ",typeof(data.user.utilityInfo))
+    console.log("user data s s s ",data.user.utilityInfo)
     setUserData(data)
     const bal = await fetchBalance(data?.user?.userAddress)
     const bal2 = await fetchBalanceGHO(data?.user?.userAddress)
@@ -87,19 +88,25 @@ useEffect(()=>{
         {/* Transaction */}
        
         <ScrollView className=" w-3/4 h-full">
-        {DATA.map((word, index) => (
-                    
-                       <View className="w-full h-20 bg-[#FBF1FB] mb-4 p-2  justify-between  rounded-2xl" style={{flexDirection:"row",flexWrap:"wrap"}} key={index}>
-                        <Text className="w-1/2 text-black"> {word.title}</Text>
-                        <Text className="w-1/2 text-green-700"> {word.amount}</Text>
-                        <Text className="w-1/2"> {word.date}</Text>
-                        <Text className="w-1/2"> {word.title}</Text>
-                      
-                    </View>
-                    
-                   
-                  
-                  ))}
+        
+      
+
+
+{useData.user && useData.user.utilityInfo && (
+  <View className="w-full h-20 bg-[#FBF1FB] mb-4 p-2 justify-between rounded-2xl">
+    {Object.entries(useData.user.utilityInfo).map(([key, value], index) => (
+      <View
+        key={index}
+        style={{ flexDirection: "row", flexWrap: "wrap" }}
+      >
+        {/* <Text className="w-1/2 text-black">{key}</Text> */}
+        <Text className="w-1/2 text-green-700 flex flex-row">{value}</Text>
+        {/* Add more styling or properties as needed */} 
+      </View>
+    ))}
+  </View>
+)}
+
         
         </ScrollView>
        
