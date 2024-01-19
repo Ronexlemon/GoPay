@@ -1,6 +1,6 @@
 import "react-native-get-random-values";
 import "@ethersproject/shims";
-import { Wallet } from "ethers";
+import { Wallet, parseEther } from "ethers";
 import { ethers,JsonRpcProvider,formatEther } from "ethers";
 import { ghoTokenAddress } from "./tokens";
 import { abi } from "./erc20Abi";
@@ -36,6 +36,12 @@ function formatEth(value, decimalPlaces = 2) {
     const ethUSD= 0.98;
     return +parseFloat(value*ethUSD).toFixed(decimalPlaces);
   }
+
+  //format to eth
+  function formatToETH(value) {
+    
+    return parseEther(value);
+  }
   // fetch balance
   export async function fetchBalanceGHO(userAddress) {
     console.log("usesssssser addresss",userAddress)
@@ -59,6 +65,34 @@ const balance = (await contract.balanceOf(userAddress)).toString();
       const provider = new JsonRpcProvider(sapolia.rpcUrl);
       let accountBalance = await provider.getBalance(userAddress);
       return String(formatEth(formatEther(accountBalance)));
+    } catch (err) {
+      console.log("error fetching balance", err);
+    }
+  }
+
+
+  //transfer GHO tokens
+
+
+  export async function transferGHO(TouserAddress,userPrivateKey,amount) {
+    console.log(`the value passed to transfer gho oooo ${TouserAddress,amount,userPrivateKey}`)
+    
+    try {
+      const provider = new JsonRpcProvider(sapolia.rpcUrl);
+      const trySenderWallet = new Wallet(userPrivateKey, provider)
+      const contract = new ethers.Contract(ghoTokenAddress,abi, trySenderWallet);
+let tx = await contract.transfer(TouserAddress,formatToETH(amount))
+ // Wait for the transaction to be mined and confirmed
+ let receipt = await tx.wait();
+
+ // Check if the transaction was successful
+ if (receipt.status === 1) {
+   // Transaction was successful
+   return { success: true, message: "Transaction confirmed successfully!" };
+ } else {
+   // Transaction failed
+   return { success: false, message: "Transaction failed!" };
+ }
     } catch (err) {
       console.log("error fetching balance", err);
     }

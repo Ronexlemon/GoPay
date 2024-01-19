@@ -6,3 +6,4 @@ export const sapolia ={
 
 }
 
+export const utilityadrress = "0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4"

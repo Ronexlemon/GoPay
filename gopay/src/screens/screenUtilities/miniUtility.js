@@ -1,16 +1,36 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity, Alert} from 'react-native';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
+import { transferGHO } from '../../web3/AccountUtils';
+import { utilityadrress } from '../../web3/chains';
 
 export default function MiniUtility({navigation}) {
   const [phoneNumber,setPhoneNumber] = useState()  
   const [password,setPassword] = useState() 
   const [amount,setAmount] = useState() 
+  const [useData,setUserData]= useState([])
   const route = useRoute()
  const utilityType = route?.params?.type
+
+
+ const buyUtility =async()=>{
+  try{
+    Alert.alert("starting")
+    const res = await transferGHO(utilityadrress,useData?.user?.PrivateKey,amount)
+    Alert.alert("response",res.message)
+    console.log("the response is",res.message);
+    if(res.success){
+    await   loginUser()
+    }
+
+
+  }catch(err){
+    console.log("buy utility error",err);
+  }
+ }
   const storeData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value);
@@ -23,19 +43,20 @@ export default function MiniUtility({navigation}) {
 
   const loginUser =async()=>{
     try{
- if (password !="" && phoneNumber !=""){
+ if (amount !="" && useData?.user?.phoneNumber !="" && utilityType !=""){
   await axios.post("https://gopayba.onrender.com/api/utility",{
         
-          phoneNumber:phoneNumber,
+          phoneNumber:useData?.user?.phoneNumber,
           amount:amount,
           type:utilityType
 
         
       }).then((response)=>{
         if (response.status == 200){
-          //console.log("user data", response.data);
-          storeData(response.data);
-          navigation.navigate('Account',{data:response.data})
+          console.log("user data  saved success", response.data);
+          // storeData(response.data);
+          // navigation.navigate('Account',{data:response.data})
+          Alert.alert("success");
           
         }
       })
@@ -50,6 +71,30 @@ export default function MiniUtility({navigation}) {
  console.log("user Authentication error",err);
     }
   }
+  //get local data
+
+       const getData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('userData');
+        return jsonValue != null ? JSON.parse(jsonValue) : null;
+      } catch (e) {
+        // error reading value
+      }
+    };
+
+    //use Effect
+    useEffect(()=>{
+        async function fetchdata(){
+          const data =  await getData()
+          console.log("user data s s s ",data.user.PrivateKey)
+          setUserData(data)
+         
+        }
+      
+        fetchdata();
+        
+          
+      },[useData])
   
   return (
     <SafeAreaView className="flex-1 w-screen h-full bg-[#FFFFFF]">
@@ -81,11 +126,13 @@ export default function MiniUtility({navigation}) {
     </View>
     <View className="flex-1 pl-10  flex-col gap-16  w-full text-9xl items-center justify-center pt-11 " >
       <TextInput label="Password"
-      placeholder='Mobile Number'      
+      placeholder='Mobile Number'  
+      value={useData?.user?.phoneNumber}   
+      editable={false} 
       onChange={(e)=> setPhoneNumber(e.nativeEvent.text)}
        className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
       <TextInput 
-      onChange={(e)=> setPassword(e.nativeEvent.text)}
+      onChange={(e)=> setAmount(e.nativeEvent.text)}
       placeholder='Password'  label="Password" className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
      
     </View>
@@ -96,7 +143,7 @@ export default function MiniUtility({navigation}) {
     <View className="bg-[#FFFFFF] w-60 rounded-full  pt-20   justify-center  ">
         <Button 
         
-        onPress={()=>navigation.navigate('Utility')}
+        onPress={()=>buyUtility()}
 title="BUY"
 color="grey"
 

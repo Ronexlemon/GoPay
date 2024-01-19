@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import { fetchBalance, fetchBalanceGHO } from '../web3/AccountUtils';
 
-export default function Account({navigate}) {
+export default function Account({navigation}) {
   // const route = useRoute()
   //  const data = route?.params?.data
   const [useData,setUserData]= useState([])
@@ -73,7 +73,7 @@ useEffect(()=>{
 
 </View>
 <View className="bg-[#B84CB8] w-32  h-10 rounded-xl items-center justify-center ">
-<TouchableOpacity><Text className="text-black ">Pay Utilities</Text></TouchableOpacity>
+<TouchableOpacity onPress={()=>navigation.navigate('Utility')}><Text className="text-black ">Pay Utilities</Text></TouchableOpacity>
 
 </View>
           
