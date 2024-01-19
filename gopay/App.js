@@ -7,6 +7,8 @@ import Login from './src/screens/Login';
 import Register from './src/screens/Register';
 import Accounts from './src/screens/Accounts';
 import Account from './src/screens/Account';
+import Utility from './src/screens/Utilities';
+import MiniUtility from './src/screens/screenUtilities/miniUtility';
 
 
 const Stack = createNativeStackNavigator();
@@ -26,6 +28,8 @@ export default function App() {
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Accounts" component={Accounts} />
       <Stack.Screen name="Account" component={Account} />
+      <Stack.Screen name="Utility" component={Utility} />
+      <Stack.Screen name="MiniUtility" component={MiniUtility} />
     </Stack.Navigator>
   </NavigationContainer>
   );

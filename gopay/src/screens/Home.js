@@ -52,7 +52,7 @@ color="grey"
         <View className="bg-[#FFFFFF] w-60 rounded-full  ">
         <Button 
         
-        onPress={()=>navigation.navigate('Register')}
+        onPress={()=>navigation.navigate('Utility')}
 title="Signup"
 color="grey"
 
