@@ -4,11 +4,14 @@ import { seedPhrase,privateKey,DATA } from '../constants/data';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
+import { fetchBalance, fetchBalanceGHO } from '../web3/AccountUtils';
 
 export default function Account({navigate}) {
   // const route = useRoute()
   //  const data = route?.params?.data
   const [useData,setUserData]= useState([])
+  const [balance,setBalance]= useState(0)
+  const [balance2,setBalanceGHO]= useState(0)
      //const wordphrase = useData?.user?.seedPhrase.split(" ")
      console.log("user user data",useData?.user?.PrivateKey);
 
@@ -34,11 +37,17 @@ useEffect(()=>{
     const data =  await getData()
     console.log("user data s s s ",data.user.PrivateKey)
     setUserData(data)
+    const bal = await fetchBalance(data?.user?.userAddress)
+    const bal2 = await fetchBalanceGHO(data?.user?.userAddress)
+    console.log("user bal",bal);
+    setBalance(bal)
+    setBalanceGHO(bal2)
   }
 
   fetchdata();
+  
     
-},[])
+},[useData])
   
   return (
     <SafeAreaView className="flex-1 w-screen h-full bg-[#FFFFFF]">
@@ -47,7 +56,8 @@ useEffect(()=>{
         {/* Balance */}
         <View className="w-3/4 bg-[#600060] h-1/6 rounded-2xl mt-16 p-5 ">
           <Text className="text-white text-xl">Balance:</Text>
-          <Text className="text-white text-xl">KSH 782,341.96</Text>
+          <Text className="text-white text-xl">ETH: $ {balance}</Text>
+          <Text className="text-white text-xl">GHO: $ {balance2}</Text>
 
 
         </View>

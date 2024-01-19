@@ -1,0 +1,1 @@
+export const ghoTokenAddress = "0xc4bF5CbDaBE595361438F8c6a187bDc330539c60"

@@ -66,7 +66,7 @@ export default function Accounts({navigation}) {
           
         }).then((response)=>{
           console.log("response is",response);
-          navigation.navigate('Account')
+          navigation.navigate('Login')
         }).catch(error => {
           console.error("Error:", error);
           // Handle error cases
