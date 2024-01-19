@@ -2,12 +2,24 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity, ScrollView, FlatList} from 'react-native';
 import { seedPhrase,privateKey,DATA } from '../constants/data';
 import { useRoute } from '@react-navigation/native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
 
 export default function Account({navigate}) {
   // const route = useRoute()
-  // const data = route?.params?.data
-     const wordphrase = seedPhrase.split(" ")
+  //  const data = route?.params?.data
+  const [useData,setUserData]= useState([])
+     //const wordphrase = useData?.user?.seedPhrase.split(" ")
+     console.log("user user data",useData?.user?.PrivateKey);
+
+     const getData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem('userData');
+        return jsonValue != null ? JSON.parse(jsonValue) : null;
+      } catch (e) {
+        // error reading value
+      }
+    };
 
      const Transactions =(trasact)=>{
       <View className="w-3/4 ">
@@ -17,7 +29,16 @@ export default function Account({navigate}) {
       </View>
      }
    
+useEffect(()=>{
+  async function fetchdata(){
+    const data =  await getData()
+    console.log("user data s s s ",data.user.PrivateKey)
+    setUserData(data)
+  }
 
+  fetchdata();
+    
+},[])
   
   return (
     <SafeAreaView className="flex-1 w-screen h-full bg-[#FFFFFF]">
@@ -50,6 +71,7 @@ export default function Account({navigate}) {
         {/* recent activities */}
         <View className=" justify-between w-3/4 mt-10">
           <Text>RECENT ACTIVITIES</Text>
+          {/* <Text>prive:{useData.user.PrivateKey}</Text> */}
           
         </View>
         {/* Transaction */}

@@ -2,11 +2,22 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity, Alert} from 'react-native';
 import { useState } from 'react';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function Login({navigation}) {
   const [phoneNumber,setPhoneNumber] = useState()  
-  const [password,setPassword] = useState()  
+  const [password,setPassword] = useState() 
+
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem('userData', jsonValue);
+    } catch (e) {
+      // saving error
+      console.log("error saving local data",e);
+    }
+  }; 
 
   const loginUser =async()=>{
     try{
@@ -19,7 +30,8 @@ export default function Login({navigation}) {
         
       }).then((response)=>{
         if (response.status == 200){
-          console.log("user data", response.data);
+          //console.log("user data", response.data);
+          storeData(response.data);
           navigation.navigate('Account',{data:response.data})
           
         }
