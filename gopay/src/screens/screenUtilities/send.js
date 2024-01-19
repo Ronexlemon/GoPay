@@ -4,76 +4,37 @@ import { useState,useEffect } from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
-import { transferGHO } from '../../web3/AccountUtils';
+import { transferSendGHO } from '../../web3/AccountUtils';
 import { utilityadrress } from '../../web3/chains';
 
-export default function MiniUtility({navigation}) {
-  const [phoneNumber,setPhoneNumber] = useState()  
-  const [password,setPassword] = useState() 
-  const [amount,setAmount] = useState() 
+export default function Send({navigation}) {
+  
   const [useData,setUserData]= useState([])
+  const [address,setAddress]= useState("");
+  const [amount,setAmount]= useState("");
   const route = useRoute()
  const utilityType = route?.params?.type
 
 
- const buyUtility =async()=>{
-  try{
-    Alert.alert("Confirm")
-    const res = await transferGHO(utilityadrress,useData?.user?.PrivateKey,amount)
-   
-    console.log("the response is",res.message);
-    if(res.success){
-    await   loginUser()
-    }else{
-      Alert.alert("Check network")
-    }
-
-
-  }catch(err){
-    console.log("buy utility error",err);
-  }
- }
-  const storeData = async (value) => {
-    try {
-      const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem('userData', jsonValue);
-    } catch (e) {
-      // saving error
-      console.log("error saving local data",e);
-    }
-  }; 
-
-  const loginUser =async()=>{
+ const sendGHO = async()=>{
     try{
- if (amount !="" && useData?.user?.phoneNumber !="" && utilityType !=""){
-  await axios.post("https://gopayba.onrender.com/api/utility",{
-        
-          phoneNumber:useData?.user?.phoneNumber,
-          amount:amount,
-          type:utilityType
-
-        
-      }).then((response)=>{
-        if (response.status == 200){
-          console.log("user data  saved success", response.data);
-          // storeData(response.data);
-          // navigation.navigate('Account',{data:response.data})
-          Alert.alert("success");
-          
+        Alert.alert("Confirm")
+        const res = await transferSendGHO(address,useData?.user?.PrivateKey,amount)
+       
+        console.log("the response is",res.message);
+        if(res.success){
+        await   Alert.alert("success")
+        }else{
+          Alert.alert("Check network")
         }
-      })
-
- }else{
-  Alert.alert("please check Your credentials")
+    
+    
+      }catch(err){
+        console.log("buy utility error",err);
+      }
  }
-      
-
-
-    }catch(err){
- console.log("user Authentication error",err);
-    }
-  }
-  //get local data
+ 
+  
 
        const getData = async () => {
       try {
@@ -119,44 +80,46 @@ export default function MiniUtility({navigation}) {
           
           
           <View className=" ml-32" >
-            <Text className="text-4xl">{utilityType} </Text>
+            <Text className="text-4xl">SEND To Address </Text>
           </View>
 
         </View>
       
      
     </View>
-    <View className="flex-1 pl-10  flex-col gap-16  w-full text-9xl items-center justify-center pt-11 " >
-      <TextInput label="Password"
-      placeholder='Mobile Number'  
-      value={useData?.user?.phoneNumber}   
-      editable={false} 
-      onChange={(e)=> setPhoneNumber(e.nativeEvent.text)}
+    <View className="flex   flex-col gap-16  w-full text-9xl items-center justify-center pt-28 " >
+      <TextInput label="Text"
+      placeholder='0x7474.....T45'  
+        
+      
+      onChange={(e)=> setAddress(e.nativeEvent.text)}
        className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
-      <TextInput 
+
+<TextInput label="Text"
+      placeholder='$ 1'  
+        
+      
       onChange={(e)=> setAmount(e.nativeEvent.text)}
-      placeholder='$ amount'  label="text" className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
-     
+       className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
+      
     </View>
     {/* button */}
-    <View className="flex flex-col gap-4  items-center">
-
-   
-    <View className=" w-60 rounded-full  pt-20   justify-center  ">
+    <View className="bg-[#FFFFFF]  justify-center  w-60 rounded-full ml-10 mt-8 flex   ">
         <Button 
         
-        onPress={()=>buyUtility()}
-title="BUY"
-color="grey"
+        
+        onPress={()=>sendGHO()}
+title="SEND"
+color="purple"
 
 
 
 />
         </View>
-        </View>
+    
     
    
-    <View className="flex-1  items-center" >
+    <View className="flex pt-28 items-center" >
       <Text className="pt-11 text-[#BEA629] ">Terms & Conditions</Text>
      
     </View>

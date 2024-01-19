@@ -6,74 +6,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
 import { transferGHO } from '../../web3/AccountUtils';
 import { utilityadrress } from '../../web3/chains';
+import * as Clipboard from 'expo-clipboard';
 
-export default function MiniUtility({navigation}) {
-  const [phoneNumber,setPhoneNumber] = useState()  
-  const [password,setPassword] = useState() 
-  const [amount,setAmount] = useState() 
+export default function Receive({navigation}) {
+    const [copiedText, setCopiedText] = useState('');
+  
   const [useData,setUserData]= useState([])
   const route = useRoute()
  const utilityType = route?.params?.type
 
 
- const buyUtility =async()=>{
-  try{
-    Alert.alert("Confirm")
-    const res = await transferGHO(utilityadrress,useData?.user?.PrivateKey,amount)
-   
-    console.log("the response is",res.message);
-    if(res.success){
-    await   loginUser()
-    }else{
-      Alert.alert("Check network")
-    }
-
-
-  }catch(err){
-    console.log("buy utility error",err);
-  }
- }
-  const storeData = async (value) => {
-    try {
-      const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem('userData', jsonValue);
-    } catch (e) {
-      // saving error
-      console.log("error saving local data",e);
-    }
-  }; 
-
-  const loginUser =async()=>{
-    try{
- if (amount !="" && useData?.user?.phoneNumber !="" && utilityType !=""){
-  await axios.post("https://gopayba.onrender.com/api/utility",{
-        
-          phoneNumber:useData?.user?.phoneNumber,
-          amount:amount,
-          type:utilityType
-
-        
-      }).then((response)=>{
-        if (response.status == 200){
-          console.log("user data  saved success", response.data);
-          // storeData(response.data);
-          // navigation.navigate('Account',{data:response.data})
-          Alert.alert("success");
-          
-        }
-      })
-
- }else{
-  Alert.alert("please check Your credentials")
- }
-      
-
-
-    }catch(err){
- console.log("user Authentication error",err);
-    }
-  }
-  //get local data
+ const copyToClipboard = async () => {
+    await Clipboard.setStringAsync(useData?.user?.PublicKey);
+  };
+  const fetchCopiedText = async () => {
+    const text = await Clipboard.getStringAsync();
+    setCopiedText(text);
+  };
+  
 
        const getData = async () => {
       try {
@@ -119,7 +69,7 @@ export default function MiniUtility({navigation}) {
           
           
           <View className=" ml-32" >
-            <Text className="text-4xl">{utilityType} </Text>
+            <Text className="text-4xl">Click The Address </Text>
           </View>
 
         </View>
@@ -127,36 +77,22 @@ export default function MiniUtility({navigation}) {
      
     </View>
     <View className="flex-1 pl-10  flex-col gap-16  w-full text-9xl items-center justify-center pt-11 " >
-      <TextInput label="Password"
+        <TouchableOpacity  className="bg-[#DBC4DB] w-full items-center h-14 rounded-full text-center " onPress={copyToClipboard}>
+            <Text className="items-center justify-center text-sm p-2">{useData?.user?.PublicKey}</Text>
+        </TouchableOpacity>
+      {/* <TextInput label="Password"
       placeholder='Mobile Number'  
       value={useData?.user?.phoneNumber}   
       editable={false} 
       onChange={(e)=> setPhoneNumber(e.nativeEvent.text)}
-       className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
-      <TextInput 
-      onChange={(e)=> setAmount(e.nativeEvent.text)}
-      placeholder='$ amount'  label="text" className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
-     
+       className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/>  */}
+      
     </View>
     {/* button */}
-    <View className="flex flex-col gap-4  items-center">
-
-   
-    <View className=" w-60 rounded-full  pt-20   justify-center  ">
-        <Button 
-        
-        onPress={()=>buyUtility()}
-title="BUY"
-color="grey"
-
-
-
-/>
-        </View>
-        </View>
+    
     
    
-    <View className="flex-1  items-center" >
+    <View className="flex items-center" >
       <Text className="pt-11 text-[#BEA629] ">Terms & Conditions</Text>
      
     </View>

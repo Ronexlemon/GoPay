@@ -5,6 +5,7 @@ import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import { fetchBalance, fetchBalanceGHO } from '../web3/AccountUtils';
+import { formatTime } from '../constants/timeConverter';
 
 export default function Account({navigation}) {
   // const route = useRoute()
@@ -13,7 +14,7 @@ export default function Account({navigation}) {
   const [balance,setBalance]= useState(0)
   const [balance2,setBalanceGHO]= useState(0)
      //const wordphrase = useData?.user?.seedPhrase.split(" ")
-     console.log("user user data",useData?.user?.PrivateKey);
+    //  console.log("user user data",useData?.user?.PrivateKey);
 
      const getData = async () => {
       try {
@@ -35,12 +36,13 @@ export default function Account({navigation}) {
 useEffect(()=>{
   async function fetchdata(){
     const data =  await getData()
-    console.log("user data s s s ",typeof(data.user.utilityInfo))
-    console.log("user data s s s ",data.user.utilityInfo)
+    //console.log("user data s s s ",typeof(data.user.utilityInfo))
+    //console.log("user data s s s ",data.user)
+   
     setUserData(data)
     const bal = await fetchBalance(data?.user?.userAddress)
     const bal2 = await fetchBalanceGHO(data?.user?.userAddress)
-    console.log("user bal",bal);
+    // console.log("user bal",bal);
     setBalance(bal)
     setBalanceGHO(bal2)
   }
@@ -65,12 +67,12 @@ useEffect(()=>{
         {/* send ,utilities */}
         <View className="w-3/4   gap-4" style={{flexDirection:"row",flexWrap:"wrap"}}>
           <View className="bg-[#B84CB8] w-32 h-10 rounded-xl items-center justify-center  ">
-            <TouchableOpacity><Text className="text-black ">Send Funds</Text></TouchableOpacity>
+            <TouchableOpacity onPress={()=>navigation.navigate('Send')}><Text className="text-black ">Send Funds</Text></TouchableOpacity>
             
 
           </View>
           <View className="bg-[#B84CB8] w-32  h-10 rounded-xl items-center justify-center ">
-          <TouchableOpacity><Text className="text-black ">Receive Funds</Text></TouchableOpacity>
+          <TouchableOpacity onPress={()=>navigation.navigate('Receive')}><Text className="text-black ">Receive Funds</Text></TouchableOpacity>
 
 </View>
 <View className="bg-[#B84CB8] w-32  h-10 rounded-xl items-center justify-center ">
@@ -86,29 +88,20 @@ useEffect(()=>{
           
         </View>
         {/* Transaction */}
-       
-        <ScrollView className=" w-3/4 h-full">
         
-      
-
-
-{useData.user && useData.user.utilityInfo && (
-  <View className="w-full h-20 bg-[#FBF1FB] mb-4 p-2 justify-between rounded-2xl">
-    {Object.entries(useData.user.utilityInfo).map(([key, value], index) => (
-      <View
-        key={index}
-        style={{ flexDirection: "row", flexWrap: "wrap" }}
-      >
-        {/* <Text className="w-1/2 text-black">{key}</Text> */}
-        <Text className="w-1/2 text-green-700 flex flex-row">{value}</Text>
-        {/* Add more styling or properties as needed */} 
-      </View>
-    ))}
+  <ScrollView className="bg-[#FBF1FB] w-3/4  h-full "  >
+  {useData.user?.utilityInfo?.map((utility, index) => (
+    <View className="bg-[#eec9ee] rounded-2xl h-28 justify-between items-center p-8 " key={index} style={{ marginVertical: 8, paddingBottom: 8,borderRadius: 8,flexDirection:"row",flexWrap:"wrap" }}>
+    <Text style={{ marginBottom: 4 }}>Paid: {utility.type}</Text>
+    <Text style={{ marginBottom: 4 }}>For: ${utility.amount}</Text>
+    <Text style={{ marginBottom: 4 }}>Mobile: {utility.phoneNumber}</Text>
+    <Text style={{ marginBottom: 4 }}>At: {formatTime(utility.createdAt)}</Text>
   </View>
-)}
 
-        
-        </ScrollView>
+  ))}
+  </ScrollView>
+ 
+
        
         
 

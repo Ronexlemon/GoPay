@@ -9,6 +9,8 @@ import Accounts from './src/screens/Accounts';
 import Account from './src/screens/Account';
 import Utility from './src/screens/Utilities';
 import MiniUtility from './src/screens/screenUtilities/miniUtility';
+import Receive from './src/screens/screenUtilities/receive';
+import Send from './src/screens/screenUtilities/send';
 
 
 const Stack = createNativeStackNavigator();
@@ -30,6 +32,8 @@ export default function App() {
       <Stack.Screen name="Account" component={Account} />
       <Stack.Screen name="Utility" component={Utility} />
       <Stack.Screen name="MiniUtility" component={MiniUtility} />
+      <Stack.Screen name="Receive" component={Receive} />
+      <Stack.Screen name="Send" component={Send} />
     </Stack.Navigator>
   </NavigationContainer>
   );

@@ -44,7 +44,7 @@ function formatEth(value, decimalPlaces = 2) {
   }
   // fetch balance
   export async function fetchBalanceGHO(userAddress) {
-    console.log("usesssssser addresss",userAddress)
+    // console.log("usesssssser addresss",userAddress)
     try {
       const provider = new JsonRpcProvider(sapolia.rpcUrl);
       const contract = new ethers.Contract(ghoTokenAddress,abi, provider);
@@ -60,7 +60,7 @@ const balance = (await contract.balanceOf(userAddress)).toString();
 
   // fetch balance
   export async function fetchBalance(userAddress) {
-    console.log("usesssssser addresss",userAddress)
+    // console.log("usesssssser addresss",userAddress)
     try {
       const provider = new JsonRpcProvider(sapolia.rpcUrl);
       let accountBalance = await provider.getBalance(userAddress);
@@ -74,28 +74,82 @@ const balance = (await contract.balanceOf(userAddress)).toString();
   //transfer GHO tokens
 
 
-  export async function transferGHO(TouserAddress,userPrivateKey,amount) {
-    console.log(`the value passed to transfer gho oooo ${TouserAddress,amount,userPrivateKey}`)
+//   export async function transferGHO(TouserAddress,userPrivateKey,amount) {
+//     console.log(`the value passed to transfer gho oooo ${TouserAddress},and ${amount} and ${userPrivateKey}`)
     
+//     try {
+//       const provider = new JsonRpcProvider(sapolia.rpcUrl);
+//       const trySenderWallet = new Wallet(userPrivateKey, provider)
+//       const contract = new ethers.Contract(ghoTokenAddress,abi, trySenderWallet);
+// let tx = await contract.transfer(TouserAddress,formatToETH(amount))
+//  // Wait for the transaction to be mined and confirmed
+//  let receipt = await tx.wait();
+// console.log("recept",receipt.status)
+//  // Check if the transaction was successful
+//  if (receipt.status === 1) {
+//    // Transaction was successful
+//    return { success: true, message: "Transaction confirmed successfully!" };
+//  } else {
+//    // Transaction failed
+//    return { success: false, message: "Transaction failed!" };
+//  }
+//     } catch (err) {
+//       console.log("error fetching balance", err);
+//     }
+//   }
+export async function transferGHO(TouserAddress, userPrivateKey, amount) {
+    console.log(`Values passed to transfer GHO: ${TouserAddress}, ${amount}, ${userPrivateKey}`);
+  
     try {
       const provider = new JsonRpcProvider(sapolia.rpcUrl);
-      const trySenderWallet = new Wallet(userPrivateKey, provider)
-      const contract = new ethers.Contract(ghoTokenAddress,abi, trySenderWallet);
-let tx = await contract.transfer(TouserAddress,formatToETH(amount))
- // Wait for the transaction to be mined and confirmed
- let receipt = await tx.wait();
-
- // Check if the transaction was successful
- if (receipt.status === 1) {
-   // Transaction was successful
-   return { success: true, message: "Transaction confirmed successfully!" };
- } else {
-   // Transaction failed
-   return { success: false, message: "Transaction failed!" };
- }
+      const trySenderWallet = new Wallet(userPrivateKey, provider);
+      const contract = new ethers.Contract(ghoTokenAddress, abi, trySenderWallet);
+  
+      const txPromise = contract.transfer(TouserAddress, formatToETH(amount));
+      const receiptPromise = txPromise.then((tx) => tx.wait());
+  
+      const [tx, receipt] = await Promise.all([txPromise, receiptPromise]);
+  
+      console.log("Transaction receipt:", receipt);
+  
+      if (receipt.status === 1) {
+        return { success: true, message: "Transaction confirmed successfully!" };
+      } else {
+        return { success: false, message: "Transaction failed!" };
+      }
     } catch (err) {
-      console.log("error fetching balance", err);
+      console.log("Error during transferGHO:", err);
+      return { success: false, message: "Error during transaction" };
     }
   }
+
+
+  //send function to address
+  export async function transferSendGHO(TouserAddress, userPrivateKey, amount) {
+    console.log(`Values passed to transfer GHO: ${TouserAddress}, ${amount}, ${userPrivateKey}`);
+  
+    try {
+      const provider = new JsonRpcProvider(sapolia.rpcUrl);
+      const trySenderWallet = new Wallet(userPrivateKey, provider);
+      const contract = new ethers.Contract(ghoTokenAddress, abi, trySenderWallet);
+  
+      const txPromise = contract.transfer(TouserAddress, formatToETH(amount));
+      const receiptPromise = txPromise.then((tx) => tx.wait());
+  
+      const [tx, receipt] = await Promise.all([txPromise, receiptPromise]);
+  
+      console.log("Transaction receipt:", receipt);
+  
+      if (receipt.status === 1) {
+        return { success: true, message: "Transaction confirmed successfully!" };
+      } else {
+        return { success: false, message: "Transaction failed!" };
+      }
+    } catch (err) {
+      console.log("Error during transferGHO:", err);
+      return { success: false, message: "Error during transaction" };
+    }
+  }
+  
   
 

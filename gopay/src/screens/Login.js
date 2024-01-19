@@ -30,7 +30,8 @@ export default function Login({navigation}) {
         
       }).then((response)=>{
         if (response.status == 200){
-          //console.log("user data", response.data);
+          console.log("user data", response.data);
+          console.log("user datautil", typeof(response.data.user.utilityInfo));
           storeData(response.data);
           navigation.navigate('Account',{data:response.data})
           
