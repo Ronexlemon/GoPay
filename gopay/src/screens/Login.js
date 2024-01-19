@@ -1,11 +1,39 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity} from 'react-native';
-
+import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity, Alert} from 'react-native';
+import { useState } from 'react';
+import axios from 'axios';
 
 
 export default function Login({navigation}) {
+  const [phoneNumber,setPhoneNumber] = useState()  
+  const [password,setPassword] = useState()  
 
-  
+  const loginUser =async()=>{
+    try{
+ if (password !="" && phoneNumber !=""){
+  await axios.post("https://gopayba.onrender.com/api/login",{
+        
+          phoneNumber:phoneNumber,
+          password:password
+
+        
+      }).then((response)=>{
+        if (response.status == 200){
+          navigation.navigate('Account')
+          
+        }
+      })
+
+ }else{
+  Alert.alert("please check Your credentials")
+ }
+      
+
+
+    }catch(err){
+ console.log("user Authentication error",err);
+    }
+  }
   
   return (
     <SafeAreaView className="flex-1 w-screen h-full bg-[#FFFFFF]">
@@ -37,11 +65,12 @@ export default function Login({navigation}) {
     </View>
     <View className="flex-1 pl-10 flex-col gap-16  w-full text-9xl items-center justify-center pt-11 " >
       <TextInput label="Password"
-      placeholder='Mobile Number'
-      
-    
+      placeholder='Mobile Number'      
+      onChange={(e)=> setPhoneNumber(e.nativeEvent.text)}
        className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
-      <TextInput placeholder='Password'  label="Password" className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
+      <TextInput 
+      onChange={(e)=> setPassword(e.nativeEvent.text)}
+      placeholder='Password'  label="Password" className="bg-[#DBC4DB] w-3/4 h-14 rounded-full text-center "/> 
      
     </View>
     <View className="flex-1 pt-20  items-center" >
@@ -51,7 +80,7 @@ export default function Login({navigation}) {
         <Button 
         
         
-        onPress={()=>navigation.navigate('Account')}
+        onPress={loginUser}
 title="SIGN IN"
 color="purple"
 
