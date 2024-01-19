@@ -19,7 +19,8 @@ export default function Login({navigation}) {
         
       }).then((response)=>{
         if (response.status == 200){
-          navigation.navigate('Account')
+          console.log("user data", response.data);
+          navigation.navigate('Account',{data:response.data})
           
         }
       })

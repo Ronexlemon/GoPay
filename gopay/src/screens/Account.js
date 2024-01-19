@@ -1,70 +1,52 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View,SafeAreaView ,TextInput,Button, TouchableOpacity, ScrollView} from 'react-native';
 import { seedPhrase,privateKey } from '../constants/data';
-
+import { useRoute } from '@react-navigation/native';
 
 export default function Account({navigate}) {
-    const wordphrase = seedPhrase.split(" ")
+  // const route = useRoute()
+  // const data = route?.params?.data
+     const wordphrase = seedPhrase.split(" ")
+   
 
   
   return (
     <SafeAreaView className="flex-1 w-screen h-full bg-[#FFFFFF]">
        <StatusBar style="auto" />
-       <View className="h-full w-full flex flex-col pt-20  ">
-        {/* secretWord */}
-        <View className="flex flex-col items-center ">
-            <Text className="text-2xl">Account</Text>
-            <Text>Here are your 12 special words keep safe</Text>
+       <View className="h-full w-full flex flex-col pt-20 items-center  gap-4 ">
+        {/* Balance */}
+        <View className="w-3/4 bg-[#600060] h-1/6 rounded-2xl mt-16 p-5 ">
+          <Text className="text-white text-xl">Balance:</Text>
+          <Text className="text-white text-xl">KSH 782,341.96</Text>
+
 
         </View>
-        {/* Seeed Phrase */}
-        <View className="h-3/6 w-3/4 bg-[#DBC4DB] m-10 rounded-3xl ">
-        <View  className="flex flex-wrap m-4 w-full h-full ">
+        {/* send ,utilities */}
+        <View className="w-3/4   gap-4" style={{flexDirection:"row",flexWrap:"wrap"}}>
+          <View className="bg-[#B84CB8] w-32 h-10 rounded-xl items-center justify-center  ">
+            <TouchableOpacity><Text className="text-black ">Send Funds</Text></TouchableOpacity>
             
-          
 
-                {wordphrase.map((word, index) => (
-                    
-          <Text key={index}>
-            {index + 1}. {word}
-          </Text>
-        
-        ))}
           </View>
+          <View className="bg-[#B84CB8] w-32  h-10 rounded-xl items-center justify-center ">
+          <TouchableOpacity><Text className="text-black ">Receive Funds</Text></TouchableOpacity>
 
+</View>
+<View className="bg-[#B84CB8] w-32  h-10 rounded-xl items-center justify-center ">
+<TouchableOpacity><Text className="text-black ">Pay Utilities</Text></TouchableOpacity>
 
-            
-
-
+</View>
+          
         </View>
-
-        {/* Private Key */}
-        <View className="flex flex-col w-full">
-            <Text className="ml-8 text-black">Private Key</Text>
-            <View className="bg-[#DBC4DB] h-14 w-3/4 m-4 rounded-2xl">
-              <Text className="text-black">{privateKey}</Text>
-
-            </View>
-
+        {/* recent activities */}
+        <View className="flex justify-between w-3/4 mt-10">
+          <Text>RECENT ACTIVITIES</Text>
+          
         </View>
-        {/* button done */}
-       <View className="bg-[#FFFFFF]  w-60 rounded-full ml-10 mt-8 flex   ">
-        <Button 
-        
-        
-        onPress={()=>navigation.navigate('Account')}
-title="DONE"
-color="purple"
-
-
-
-/>
-        </View>
-        {/* {Terms} */}
-        <View className="flex-1  items-center" >
-      <Text className="pt-11 text-[#BEA629] ">Terms & Conditions</Text>
-     
-    </View>
+        {/* Transaction */}
+        <ScrollView>
+          
+        </ScrollView>
        </View>
 
 
